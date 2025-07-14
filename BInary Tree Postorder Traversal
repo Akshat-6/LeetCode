@@ -1,0 +1,17 @@
+
+class Solution {
+    public void post(TreeNode root)
+    {
+        if(root == null)    return;
+
+        post(root.left);
+        post(root.right);
+        list.add(root.val);
+    }
+    static ArrayList<Integer> list = new ArrayList<>();
+    public List<Integer> postorderTraversal(TreeNode root) {
+        list.clear();
+        post(root);
+        return list;
+    }
+}
