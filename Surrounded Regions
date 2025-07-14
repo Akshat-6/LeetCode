@@ -1,0 +1,33 @@
+class Solution {
+    public void capture(char[][] board, int r, int c){
+        //base case: if we come out of the boundary, or if the char at that index is not equal to 0, then we will return
+        if(r < 0 || r >= board.length || c < 0 || c >= board[0].length || board[r][c] != 'O') return;
+        //if board[r][c]=='O', mark it with a temp char 'T'
+        board[r][c]='T';
+        //then call dfs for all 4 directions, up, down, left, right 
+        capture(board, r-1, c); //up
+        capture(board, r+1, c); //down
+        capture(board, r, c-1); //left
+        capture(board, r, c+1); //right
+    }
+    public void solve(char[][] board) {
+        int m = board.length; //number of rows
+        int n = board[0].length; //number of columns
+        //1st capture the unsurrounded region, i.e, "O's on the border of board"
+        for(int r=0;r<m;r++){ //this is for all rows which are at 0th or last column
+            if(board[r][0]=='O')  capture(board, r, 0);
+            if(board[r][n-1]=='O') capture(board, r, n-1);
+        }
+        for(int c=0;c<n;c++){ //this is for all columns which are at 0th or last row
+            if(board[0][c]=='O') capture(board, 0, c);
+            if(board[m-1][c]=='O') capture(board, m-1, c);
+        }
+        //Capture the Surrounded region, and make T as O again
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(board[i][j]=='O') board[i][j]='X'; //if any board[i][j]=='O', then it means it is surrounded by 'X' from 4 directions, so make it capture with 'X'
+                else if(board[i][j]=='T') board[i][j]='O'; //if we come here means we are at borders of board and may be the 'O' was not surrounded by 'X' from all 4 directions that's why we make that index as T, so now convert it to 'O' again
+            }
+        }
+    }
+}
