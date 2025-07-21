@@ -1,0 +1,9 @@
+select 
+request_at as Day,
+round(sum(case when status not like 'completed' then 1 else 0 end) / count(*), 2) as `Cancellation Rate`
+from Trips t
+where 
+client_id in (select users_id from Users u where banned = 'No')
+and driver_id in (select users_id from Users u where banned = 'No')
+and request_at between "2013-10-01" and "2013-10-03"
+group by request_at
