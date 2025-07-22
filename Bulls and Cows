@@ -1,0 +1,38 @@
+class Solution {
+    public String getHint(String secret, String guess) {
+        // Initialize counters for Bulls and Cows
+        int bulls = 0;
+        int cows = 0;
+
+        // Arrays to store frequency of digits (0-9) in secret and guess (excluding Bulls)
+        int[] secretCounts = new int[10];  // Tracks digits in secret (not Bulls)
+        int[] guessCounts = new int[10];   // Tracks digits in guess (not Bulls)
+
+        // First pass: Check for Bulls and count non-Bull digits
+        for (int i = 0; i < secret.length(); i++) {
+            char secretChar = secret.charAt(i);
+            char guessChar = guess.charAt(i);
+
+            if (secretChar == guessChar) {
+                bulls++;  // Exact match → Bull 🎯
+            } else {
+// secretCounts is needed to know how many times each digit occurs 
+//in secret (except for “bulls"). 
+//This allows you to correctly count the “cows”, 
+//given that there can be several numbers in the secret.
+                
+// If not a Bull, increment frequency in respective arrays
+                secretCounts[secretChar - '0']++;  // Convert char to int (e.g., '1' → 1)
+                guessCounts[guessChar - '0']++;
+            }
+        }
+
+        // Second pass: Calculate Cows (min of counts for each digit)
+        for (int i = 0; i < 10; i++) {
+            cows += Math.min(secretCounts[i], guessCounts[i]);  // Cows = overlapping digits 🤔
+        }
+
+        // Return result in "xAyB" format
+        return bulls + "A" + cows + "B";
+    }
+}
