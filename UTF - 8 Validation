@@ -1,0 +1,24 @@
+class Solution {
+    public boolean validUtf8(int[] data) {
+        int still_left = 0;
+        for(int i = 0; i <data.length; i++){
+            
+            int x = data[i];
+            
+            if(still_left == 0){
+                if((x >> 5) == 0b110) still_left = 1;                // shifting 5 bits 
+                
+                else if((x >> 4) == 0b1110) still_left = 2;          // shifting 4 bits 
+                
+                else if((x >> 3) == 0b11110) still_left = 3;         // shifting 3 bits 
+                
+                else if((x >> 7) != 0) return false;                 // shifting 7 bits 
+            } 
+            else {
+                if((x >> 6) != 0b10) return false;
+                still_left--;
+            }
+        }
+        return (still_left == 0);           // If we have nothing remaining to operate on,
+    }                                       // then it is a valid UTF-8 encoding 
+}
