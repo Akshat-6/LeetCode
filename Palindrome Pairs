@@ -1,0 +1,73 @@
+class Solution {
+    List<List<Integer>> result = new ArrayList<>();
+    Map<String,Integer> map = new HashMap<>();
+    public List<List<Integer>> palindromePairs(String[] words) {
+        if(words == null || words.length == 0){
+            return result;
+        }
+        
+        String[]reverse = new String[words.length];
+    
+        
+        for(int i=0;i<words.length;i++){
+            map.put(words[i],i);
+            reverse[i] = new StringBuilder(words[i]).reverse().toString();
+         }
+        
+        
+        
+        if(map.containsKey("")){
+            for(int i=0;i<words.length;i++){
+                if(i != map.get("") && isPalindrome(words[i],0,words[i].length()-1)){
+                    result.add(Arrays.asList(map.get(""),i));
+                    result.add(Arrays.asList(i,map.get("")));
+                }
+            }
+        }
+        
+        //reflection
+        
+        for(int i=0;i<words.length;i++){
+          
+            if(map.containsKey(reverse[i])){
+                Integer idx = map.get(reverse[i]);
+                if(idx != null && idx != i){
+                result.add(Arrays.asList(i,idx));
+                }
+            }
+        }
+        
+        for(int i=0;i<words.length;i++){
+            String currentWord = words[i];
+            for(int cut=1;cut<currentWord.length();cut++){
+                String leftCut = currentWord.substring(0,cut);
+                String rightCut = currentWord.substring(cut);
+                if(isPalindrome(leftCut,0,leftCut.length()-1)){
+                    String r = new StringBuilder(rightCut).reverse().toString();
+                    if(map.containsKey(r)){
+                        result.add(Arrays.asList(map.get(r),i));
+                    }
+                }
+                if(isPalindrome(rightCut,0,rightCut.length()-1)){
+                     String r = new StringBuilder(leftCut).reverse().toString();
+                    if(map.containsKey(r)){
+                        result.add(Arrays.asList(i,map.get(r)));
+                    }
+                }
+            }
+        }
+        
+        return result;
+        
+    }
+    
+    
+    public boolean isPalindrome(String word,int start,int end){
+        while(start < end){
+            if(word.charAt(start++) != word.charAt(end--)){
+                return false;
+            }
+        }
+        return true;
+    }
+}
