@@ -1,0 +1,51 @@
+class Pair {
+    int i;
+    int j;
+    Pair(int i, int j) {
+        this.i = i;
+        this.j = j;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Pair)) return false;
+        Pair other = (Pair) obj;
+        return this.i == other.i && this.j == other.j;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * i + j;
+    }
+}
+
+class Solution {
+    Set<Pair> st = new HashSet<>();
+
+    public boolean canMeasureWater(int x, int y, int target) {
+        if (x + y < target) return false;
+        if (x == target || y == target || x + y == target) return true;
+        return find(x, y, 0, 0, target);
+    }
+
+    boolean find(int x, int y, int i, int j, int target) {
+        if (i == target || j == target || i + j == target) return true;
+        if (st.contains(new Pair(i, j))) return false;
+        st.add(new Pair(i, j));
+
+        if (find(x, y, x, j, target)) return true;
+        if (find(x, y, i, y, target)) return true;
+
+        int xty = Math.min(i, y - j);
+        if (xty > 0 && find(x, y, i - xty, j + xty, target)) return true;
+
+        int ytx = Math.min(x - i, j);
+        if (ytx > 0 && find(x, y, i + ytx, j - ytx, target)) return true;
+
+        if (find(x, y, 0, j, target)) return true;
+        if (find(x, y, i, 0, target)) return true;
+
+        return false;
+    }
+}
